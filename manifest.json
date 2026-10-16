@@ -1,7 +1,10 @@
 {
     "author": "TrackMeNot",
     "background": {
-        "page": "background.html"
+        "scripts": [
+            "trackmenot.js"
+        ],
+        "persistent": true
     },
   "browser_action": {
     "default_icon": "tmn.png",
@@ -23,7 +26,7 @@
     "description": "Protect against data profiling by search engines",
     "icons": {
         "16": "icon16.png",
-        "48": "icon32.png"
+        "32": "icon32.png"
     },
     "manifest_version": 2,
     "name": "TrackMeNot",
@@ -38,5 +41,15 @@
         "webNavigation",
         "storage"
     ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "trackmenot@rednoise.org",
+            "data_collection_permissions": {
+                "required": [
+                    "none"
+                ]
+            }
+        }
+    },
     "version": "0.10.46"
 }

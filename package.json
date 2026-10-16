@@ -1,0 +1,15 @@
+{
+  "name": "trackmenot",
+  "version": "0.10.46",
+  "description": "TrackMeNot - Firefox (Manifest V2) WebExtension",
+  "private": true,
+  "scripts": {
+    "lint": "web-ext lint --source-dir .",
+    "build": "web-ext build --source-dir . --artifacts-dir dist --overwrite-dest",
+    "start": "web-ext run --source-dir . --firefox \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\"",
+    "start:profile": "web-ext run --source-dir . --firefox \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\" --keep-profile-changes --firefox-profile ./.ff-profile"
+  },
+  "devDependencies": {
+    "web-ext": "^10.8.0"
+  }
+}
