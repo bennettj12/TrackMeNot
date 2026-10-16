@@ -28,11 +28,12 @@ Firefox therefore refused to load the add-on. Fixes applied:
 ```bash
 npm install      # install web-ext
 npm run lint     # validate the extension (expect 0 errors)
-npm run build    # package into dist/trackmenot-0.10.46.zip (+ .xpi)
+npm run build    # package into dist/trackmenot-0.10.46.zip
+npm run sign     # sign via AMO (unlisted); reads .environment or shell env
 npm start        # launch Firefox with the add-on loaded temporarily
 ```
 
-The build produces `dist/trackmenot-0.10.46.xpi` (an XPI is just a ZIP).
+The build produces `dist/trackmenot-0.10.46.zip` (an XPI is just a ZIP).
 
 ## Loading it in Firefox
 
@@ -42,13 +43,40 @@ The build produces `dist/trackmenot-0.10.46.xpi` (an XPI is just a ZIP).
 - open `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on…** and select
   `manifest.json` (or the generated `.xpi`).
 
-**Permanent:**
+**Permanent — option 1: sign it yourself (keeps your current Firefox Release / main profile).**
 
-- Firefox Release refuses permanently-installed unsigned XPIs. Either:
-  - sign the XPI on [addons.mozilla.org](https://addons.mozilla.org/developers/)
-    (`web-ext sign --api-key … --api-secret …`), or
-  - use Firefox Developer Edition / Nightly / ESR with
-    `xpinstall.signatures.required = false` in `about:config`, then install the `.xpi`.
+Mozilla signs it for free through AMO's "unlisted" (self-distribution) channel. It is not
+publicly listed and is auto-approved (no manual review). You stay on Firefox Release.
+
+1. Create an account at <https://addons.mozilla.org> and generate API credentials at
+   <https://addons.mozilla.org/developers/addon/api/key/>.
+2. Save them in `.environment` in the project root (git-ignored; never commit it):
+
+   ```
+   JWT_ISSUER=user:12345678:12
+   JWT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   ```
+
+   (`WEB_EXT_API_KEY` / `WEB_EXT_API_SECRET` are also accepted, in the file or the shell.)
+3. Run `npm run sign`. The signed XPI is written to `dist/` (named `<amo-id>-<version>.xpi`).
+   Open it in Firefox (or drag it into `about:addons`) to install permanently.
+
+If signing fails with an "ID already in use" error, change
+`browser_specific_settings.gecko.id` in `manifest.json` to something unique to you and retry.
+
+**Permanent — option 2: switch to a channel that allows unsigned add-ons.**
+
+Verified against the actual builds: Firefox **Release** and **Beta** compile in
+`MOZ_REQUIRE_SIGNING = true`, so `xpinstall.signatures.required` is ignored and unsigned
+add-ons can never be installed permanently. **Developer Edition**, **Nightly** and **ESR**
+compile it as `false`, so unsigned installs work there:
+
+1. Install Firefox Developer Edition (or Nightly/ESR).
+2. In `about:config`, set `xpinstall.signatures.required` = `false`.
+3. Open `dist/trackmenot-0.10.46.zip` (rename to `.xpi` first, or drag it into `about:addons`).
+
+Note: Developer Edition / Nightly use their own profiles by default and do not migrate your
+Release profile automatically.
 
 ## Known warnings
 

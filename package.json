@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "web-ext lint --source-dir .",
     "build": "web-ext build --source-dir . --artifacts-dir dist --overwrite-dest",
+    "sign": "node scripts/sign.mjs",
     "start": "web-ext run --source-dir . --firefox \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\"",
     "start:profile": "web-ext run --source-dir . --firefox \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\" --keep-profile-changes --firefox-profile ./.ff-profile"
   },

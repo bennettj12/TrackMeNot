@@ -162,6 +162,12 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
+# Secrets / credentials (never commit)
+.environment
+.env
+.env.*
+!.env.example
+
 # Node / web-ext tooling
 node_modules/
 dist/
